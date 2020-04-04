@@ -10,10 +10,7 @@
           </div>
           <div>
             Balance:
-            <code
-              >{{ account.currency.name === "usd" ? "$" : "€"
-              }}{{ account.balance }}</code
-            >
+            <code>{{ account.currency.symbol }}{{ account.balance }}</code>
           </div>
         </b-card-text>
         <b-button size="sm" variant="success" @click="show = !show"
@@ -49,7 +46,7 @@
           </b-form-group>
 
           <b-form-group id="input-group-2" label="Amount:" label-for="input-2">
-            <b-input-group prepend="$" size="sm">
+            <b-input-group :prepend="account.currency.symbol" size="sm">
               <b-form-input
                 id="input-2"
                 v-model="payment.amount"
@@ -75,7 +72,7 @@
       </b-card>
 
       <b-card class="mt-3" header="Payment History">
-        <b-table striped hover :items="transactions"></b-table>
+        <b-table striped hover :items="transactions" :fields="transactionTableFields"></b-table>
       </b-card>
     </div>
   </div>
@@ -93,6 +90,13 @@ export default {
 
       account: null,
       transactions: null,
+
+      transactionTableFields: [
+        { key: 'id', label: 'ID' },
+        { key: 'from.name', label: 'From' },
+        { key: 'to.name', label: 'To' },
+        { key: 'amount', label: 'Amount' }
+      ],
 
       transactionErrors: [],
 
@@ -128,11 +132,9 @@ export default {
 
         var transactions = [];
         for (let i = 0; i < that.transactions.length; i++) {
-          that.transactions[i].amount =
-            (that.account.currency.name === "usd" ? "$" : "€") +
-            that.transactions[i].amount;
+          that.transactions[i].amount = that.transactions[i].currency.symbol + that.transactions[i].amount;
 
-          if (that.account.id != that.transactions[i].to) {
+          if (that.account.id != that.transactions[i].to.id) {
             that.transactions[i].amount = "-" + that.transactions[i].amount;
           }
 
