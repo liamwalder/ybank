@@ -23,4 +23,12 @@ class Currency extends Model
      */
     public $timestamps = false;
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function accounts()
+    {
+        return $this->hasMany(Account::class);
+    }
+
 }

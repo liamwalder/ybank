@@ -24,4 +24,12 @@ class Account extends Model
      */
     public $timestamps = false;
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
+    }
+
 }
