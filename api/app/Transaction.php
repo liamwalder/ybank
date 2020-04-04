@@ -21,4 +21,9 @@ class Transaction extends Model
         'details'
     ];
 
+    /**
+     * @var bool
+     */
+    public $timestamps = false;
+
 }
