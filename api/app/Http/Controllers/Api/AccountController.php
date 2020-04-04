@@ -23,7 +23,8 @@ class AccountController extends Controller
             'name' => $account->name,
             'balance' => $account->balance,
             'currency' => [
-                'name' => $account->currency ? $account->currency->name : null
+                'name' => $account->currency->name,
+                'symbol' => $account->currency->symbol
             ]
         ];
     }
