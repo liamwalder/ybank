@@ -95,7 +95,8 @@ export default {
         { key: 'id', label: 'ID' },
         { key: 'from.name', label: 'From' },
         { key: 'to.name', label: 'To' },
-        { key: 'amount', label: 'Amount' }
+        { key: 'amount', label: 'Amount' },
+        { key: 'details', label: 'Details' }
       ],
 
       transactionErrors: [],
