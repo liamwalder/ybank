@@ -58,7 +58,7 @@ class TransactionStoreRequest extends FormRequest
 
             'amount.required' => 'Please enter amount.',
             'amount.regex' => 'Please enter a correctly formatted money amount.',
-            'amount.lte' => 'You don\'t have enough balance to send this amount of money.'
+            'amount.lte' => 'You don\'t have enough balance to send that amount of money.'
         ];
     }
 }
