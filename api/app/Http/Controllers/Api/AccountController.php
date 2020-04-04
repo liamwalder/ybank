@@ -14,11 +14,18 @@ class AccountController extends Controller
 
     /**
      * @param Account $account
-     * @return Account
+     * @return array
      */
     public function show(Account $account)
     {
-        return $account;
+        return [
+            'id' => $account->id,
+            'name' => $account->name,
+            'balance' => $account->balance,
+            'currency' => [
+                'name' => $account->currency ? $account->currency->name : null
+            ]
+        ];
     }
 
 }
