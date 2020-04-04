@@ -31,6 +31,11 @@
       </b-card>
 
       <b-card class="mt-3" header="New Payment" v-show="show">
+        <b-alert :show="transactionErrors.length > 0" variant="danger">
+          <ul v-bind:style="{ marginBottom: 0 }">
+            <li v-for="error in transactionErrors" :key="error">{{ error }}</li>
+          </ul>
+        </b-alert>
         <b-form @submit="onSubmit">
           <b-form-group id="input-group-1" label="To:" label-for="input-1">
             <b-form-input
@@ -89,6 +94,8 @@ export default {
       account: null,
       transactions: null,
 
+      transactionErrors: [],
+
       loading: true
     };
   },
@@ -99,10 +106,10 @@ export default {
     axios
       .get(`http://localhost:8000/api/accounts/${this.$route.params.id}`)
       .then(function(response) {
-        if (!response.data.length) {
-          window.location = "/";
+        if (response.data.errors) {
+            window.location = "/";
         } else {
-          that.account = response.data[0];
+          that.account = response.data;
 
           if (that.account && that.transactions) {
             that.loading = false;
@@ -142,7 +149,7 @@ export default {
 
   methods: {
     onSubmit(evt) {
-      var that = this;
+      const that = this;
 
       evt.preventDefault();
 
@@ -152,49 +159,62 @@ export default {
         }/transactions`,
 
         this.payment
-      );
+      )
+      .then(function(response) {
 
-      that.payment = {};
-      that.show = false;
+          that.payment = {};
+          that.show = false;
+          that.transactionErrors = [];
 
-      // update items
-      setTimeout(() => {
-        axios
-          .get(`http://localhost:8000/api/accounts/${this.$route.params.id}`)
-          .then(function(response) {
-            if (!response.data.length) {
-              window.location = "/";
-            } else {
-              that.account = response.data[0];
-            }
-          });
+          // update items
+          setTimeout(() => {
+            axios
+              .get(`http://localhost:8000/api/accounts/${that.$route.params.id}`)
+              .then(function(response) {
+                if (response.data.errors) {
+                  window.location = "/";
+                } else {
+                    that.account = response.data;
+                }
+              });
 
-        axios
-          .get(
-            `http://localhost:8000/api/accounts/${
-              that.$route.params.id
-            }/transactions`
-          )
-          .then(function(response) {
-            that["transactions"] = response.data;
+            axios
+              .get(
+                `http://localhost:8000/api/accounts/${
+                    that.$route.params.id
+                    }/transactions`
+              )
+              .then(function(response) {
+                  that["transactions"] = response.data;
 
-            var transactions = [];
-            for (let i = 0; i < that.transactions.length; i++) {
-              that.transactions[i].amount =
-                (that.account.currency === "usd" ? "$" : "€") +
-                that.transactions[i].amount;
+                  var transactions = [];
 
-              if (that.account.id != that.transactions[i].to) {
-                that.transactions[i].amount = "-" + that.transactions[i].amount;
-              }
+                  for (let i = 0; i < that.transactions.length; i++) {
+                    that.transactions[i].amount =
+                        (that.account.currency === "usd" ? "$" : "€") +
+                        that.transactions[i].amount;
 
-              transactions.push(that.transactions[i]);
-            }
+                    if (that.account.id != that.transactions[i].to) {
+                        that.transactions[i].amount = "-" + that.transactions[i].amount;
+                    }
 
-            that.transactions = transactions;
-          });
-      }, 200);
+                    transactions.push(that.transactions[i]);
+                  }
+
+                  that.transactions = transactions;
+              });
+          }, 200);
+      })
+      .catch(error => {
+          that.transactionErrors = [];
+          for (var key in error.response.data.errors) {
+              error.response.data.errors[key].forEach((error) => {
+                that.transactionErrors.push(error);
+              });
+          }
+      });
     }
+
   }
 };
 </script>
