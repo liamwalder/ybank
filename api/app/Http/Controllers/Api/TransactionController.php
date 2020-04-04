@@ -40,7 +40,7 @@ class TransactionController extends Controller
 
         $account->update(['balance' => ($account->balance - $amount)]);
 
-        $toAccount->update(['balance' => ($account->balance + $amount)]);
+        $toAccount->update(['balance' => ($toAccount->balance + $amount)]);
 
         $transaction = Transaction::create([
             'amount' => $amount,
