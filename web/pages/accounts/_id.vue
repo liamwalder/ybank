@@ -11,7 +11,7 @@
           <div>
             Balance:
             <code
-              >{{ account.currency === "usd" ? "$" : "€"
+              >{{ account.currency.name === "usd" ? "$" : "€"
               }}{{ account.balance }}</code
             >
           </div>
@@ -129,7 +129,7 @@ export default {
         var transactions = [];
         for (let i = 0; i < that.transactions.length; i++) {
           that.transactions[i].amount =
-            (that.account.currency === "usd" ? "$" : "€") +
+            (that.account.currency.name === "usd" ? "$" : "€") +
             that.transactions[i].amount;
 
           if (that.account.id != that.transactions[i].to) {
@@ -191,7 +191,7 @@ export default {
 
                   for (let i = 0; i < that.transactions.length; i++) {
                     that.transactions[i].amount =
-                        (that.account.currency === "usd" ? "$" : "€") +
+                        (that.account.currency.name === "usd" ? "$" : "€") +
                         that.transactions[i].amount;
 
                     if (that.account.id != that.transactions[i].to) {
