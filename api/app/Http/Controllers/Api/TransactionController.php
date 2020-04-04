@@ -21,7 +21,9 @@ class TransactionController extends Controller
      */
     public function index(Account $account)
     {
-        $transactions = Transaction::where('from', $account->id)->orWhere('to', $account->id)->get();
+        $transactions = Transaction::with('currency', 'to', 'from')
+            ->where('from', $account->id)->orWhere('to', $account->id)
+            ->get();
 
         return $transactions;
     }
@@ -47,6 +49,7 @@ class TransactionController extends Controller
             'details' => $details,
             'from' => $account->id,
             'to' => $toAccount->id,
+            'currency_id' => $account->currency->id
         ]);
 
         return $transaction;
