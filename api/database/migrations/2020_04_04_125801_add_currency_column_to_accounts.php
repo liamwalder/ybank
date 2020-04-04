@@ -14,7 +14,7 @@ class AddCurrencyColumnToAccounts extends Migration
     public function up()
     {
         Schema::table('accounts', function (Blueprint $table) {
-            $table->addColumn('unsignedInteger', 'currency_id');
+            $table->bigInteger('currency_id')->unsigned()->nullable();
         });
     }
 
